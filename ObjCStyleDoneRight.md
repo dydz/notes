@@ -26,7 +26,7 @@ Unless the language mandates it to produce correct code gen, I use whitespace in
 
 ### Pick the right control and data structures
 
-The right way to do software engineering is to pick the right structures for the code being written. There are control structures (e.g. if, while, do, for, switch) and data structures (e.g. arrays, unions, etc). Finding the right structure is a skill, but here is 1 general strategies I use when I can't identify it from the get-go:
+The right way to do software engineering is to pick the right structures for the code being written. There are control structures (e.g. if, while, do, for, switch) and data structures (e.g. arrays, unions, etc). Finding the right structure is a skill, but here are 2 different general strategies I use when I can't identify it from the get-go:
 
 Top down:
 
@@ -34,6 +34,11 @@ Top down:
 2. Review each line of code, each assigment, each control flow statement, etc etc and ask:
    a. Am I repeating myself? If so, see (b).
    b. Is there an another language structure that would be better suited for what is being done? If so, use it.
+
+Bottom up:
+
+1. Solve the problem using the absolute mimimum number of machine instructions and memory footprint (I find this exercise to be a fun game). This tends to produce a very clever solution that would require comments, but I don't want to add comments if the code can be made intutive by using other langauge structures. So, I...
+2. Work backwards from (1) replacing low level primitives with higher level ones until the solution no longer needs comments.
 
 Once I have the right structures in place then it's time to consult the cookbook!
 
@@ -291,6 +296,14 @@ BOOL (^checkState)(NSString *) = ^BOOL(NSString *aString) {
   ...
   return YES;
 };
+```
+
+#### Passing as an argument
+
+Right:
+
+```objc
+typedef CheckStateFunctionType = BOOL (^checkState)(NSString *)
 ```
 
 ### Naming
