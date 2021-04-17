@@ -95,7 +95,7 @@ i ++;
 
 #### Binary and ternary operators
 
-1. Place spaces around binary and ternary operators.
+1. Do place spaces around binary and ternary operators.
 
 Right:
 
@@ -137,6 +137,24 @@ for (int i = 0 ; i < 10 ; ++i)
     doSomething();
 
 f(a , b) ;
+```
+
+#### Control statements
+
+1. Do place spaces between control statements and their parentheses.
+
+Right
+
+```objc
+if (condition)
+    doSomething();
+```
+
+Wrong:
+
+```objc
+if(condition)
+    doSomething();
 ```
 
 #### Functions
@@ -276,6 +294,231 @@ if (condition) {
 }
 ```
 
+### Braces
+
+#### Functions
+
+Place each brace on its own line.
+
+Right:
+
+```objc
+int main()
+{
+    ...
+}
+```
+
+Wrong:
+
+```objc
+int main() {
+    ...
+}
+```
+
+#### Structs, control clauses and everything else
+
+Place the open brace on the line preceding the code block; place the close brace on its own line.
+
+Right:
+
+```objc
+struct MyStruct {
+    ...
+};
+
+for (int i = 0; i < 10; ++i) {
+    ...
+}
+```
+
+Wrong:
+
+```objc
+struct MyStruct
+{
+    ...
+};
+
+for (int i = 0; i < 10; ++i)
+{
+    ...
+}
+```
+
+#### One-line control clauses
+
+Should not use braces unless comments are included or a single statement spans multiple lines.
+
+Right:
+
+```objc
+if (condition)
+    doIt();
+
+if (condition) {
+    // Some comment
+    doIt();
+}
+
+if (condition) {
+    myFunction(reallyLongParam1, reallyLongParam2, ...
+        reallyLongParam5);
+}
+```
+
+Wrong:
+
+```objc
+if (condition) {
+    doIt();
+}
+
+if (condition)
+    // Some comment
+    doIt();
+
+if (condition)
+    myFunction(reallyLongParam1, reallyLongParam2, ...
+        reallyLongParam5);
+```
+
+#### Control clauses without a body
+
+Right:
+
+```objc
+for ( ; current; current = current->next) { }
+```
+
+Wrong:
+
+```objc
+for ( ; current; current = current->next);
+```
+
+### Null, false and zero
+
+1. In Objective-C++, the null pointer value for a C++ type should be written as `nullptr`. For a C type, it should be written as `NULL`. For an Objective-C object it should be written as `nil`.
+
+2. Objective-C `BOOL` values should be written as `YES` and `NO`.
+3. In Objective-C, instance variables are initialized to zero automatically. Don’t add explicit initializations to nil or NO in an init method.
+4. Tests for true/false, null/non-null, and zero/non-zero should all be done without equality comparisons:
+
+Right:
+
+```objc
+if (condition)
+    doIt();
+
+if (!ptr)
+    return;
+
+if (!count)
+    return;
+```
+
+Wrong:
+
+```objc
+if (condition == YES)
+    doIt();
+
+if (ptr == NULL)
+    return;
+
+if (count == 0)
+    return;
+```
+
+### Floating point literals
+
+Unless required in order to force floating point math, do not append `.0`, `.f` and `.0f` to floating point literals.
+
+Right:
+```objc
+const double duration = 60;
+
+- (void)setDiameter:(float)diameter
+{
+    _radius = diameter / 2;
+}
+
+[self setDiameter:10];
+
+const int framesPerSecond = 12;
+double frameDuration = 1.0 / framesPerSecond;
+```
+
+Wrong:
+```objc
+const double duration = 60.0;
+
+- (void)setDiameter:(float)diameter
+{
+    _radius = diameter / 2.f;
+}
+
+[self setDiameter:10.f];
+
+const int framesPerSecond = 12;
+double frameDuration = 1 / framesPerSecond; // integer division
+```
+
+### Properties, instance variables, setters and getters
+
+1. Use properties instead of manually declaring setters and getter and defining instance variables.
+
+Right:
+
+```objc
+@interface Document
+@property (nonatomic) Frame *frame;
+@property (nonatomic) NSURL *url;
+@property (nonatomic, readonly) NSString *title;
+@end
+```
+
+Wrong:
+
+```objc
+@interface Document {
+    Frame *frame;
+}
+- (NSURL *)url;
+- (void)setURL:(NSURL *)url;
+- (NSString *)title;
+@end
+```
+
+2. Declare private and implementation-specific variables in an anonymous category in the implementation file or instead of declaring in the class definition.
+
+Right:
+
+```objc
+// Document.h
+@interface Document
+@property (nonatomic) NSURL *url;
+@end
+
+// Document.m
+@interface Document ()
+@property (nonatomic) Frame *frame;
+@end
+```
+
+Wrong:
+
+```objc
+// Document.h
+@interface Document {
+@private
+    Frame *frame;
+}
+@end
+```
+
 ### Blocks
 
 #### Using to scope
@@ -297,6 +540,8 @@ BOOL (^checkState)(NSString *) = ^BOOL(NSString *aString) {
   return YES;
 };
 ```
+
+
 
 #### Passing as an argument
 
