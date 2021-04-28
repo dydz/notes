@@ -10,6 +10,7 @@ My style is heavily influenced by:
 1. <https://webkit.org/code-style-guidelines/>
 2. <https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html>
 3. [K&R](https://en.wikipedia.org/wiki/The_C_Programming_Language)
+4. [FreeBSD style guide](https://www.freebsd.org/cgi/man.cgi?query=style&sektion=9)
 
 ## The Philosophy
 
@@ -71,6 +72,52 @@ static BOOL myFunction()
 {
                     return YES;
 }
+```
+
+3. A case label should line up with its switch statement. The case statement is indented.
+
+Right:
+
+```objc
+switch (condition) {
+case fooCondition:
+case barCondition:
+    i++;
+    break;
+default:
+    i--;
+}
+```
+
+Wrong:
+
+```objc
+switch (condition) {
+    case fooCondition:
+    case barCondition:
+        i++;
+        break;
+    default:
+        i--;
+}
+```
+
+4. Boolean expressions at the same nesting level that span multiple lines should have their operators on the left side of the line instead of the right side.
+
+Right:
+
+```objc
+return [attribute.name isEqualToString:srcAttr]
+    || [attribute.name isEqualToString:lowsrcAttr]
+    || ([attribute.name isEqualToString:useMapAttr] && [attribute.value.string characterAtIndex:0] != '#');
+```
+
+Wrong:
+
+```objc
+return [attribute.name isEqualToString:srcAttr] ||
+    [attribute.name isEqualToString:lowsrcAttr] ||
+    ([attribute.name isEqualToString:useMapAttr] && [attribute.value.string characterAtIndex:0] != '#');
 ```
 
 ### Spacing
@@ -517,6 +564,198 @@ Wrong:
     Frame *frame;
 }
 @end
+```
+
+### Switch statements
+
+1. Sort case statements unless they cascade. For case statements that cascade, sort the cascade.
+
+Right:
+
+```objc
+switch (condition) {
+case A:
+  ...
+  break;
+case B:
+  ...
+  break;
+case C:
+  ...
+  break;
+}
+
+switch (anotherCondition) {
+case C:
+    ...
+    break;
+case A:
+case B:
+    ...
+    break;
+}
+```
+
+Wrong:
+
+```objc
+switch (condition) {
+case C:
+    ...
+    break;
+case B:
+    ...
+    break;
+case A:
+    ...
+    break;
+}
+
+switch (anotherCondition) {
+case C:
+    ...
+    break;
+case B:
+case A:
+    ...
+    break;
+}
+```
+
+2. Avoid mixing cases that `break` and `return`.  That is, prefer having all cases `break` or `return`.
+
+Right:
+
+```objc
+switch (condition) {
+case A:
+    ...
+    break;
+case B:
+    ...
+    break;
+case C:
+    ...
+    break;
+}
+```
+
+Wrong:
+
+```objc
+switch (condition) {
+case A:
+    ...
+    break;
+case B:
+    ...
+    return;
+case C:
+    ...
+    break;
+}
+```
+
+3. Omit the default statement whenever the condition is an enum type.
+
+Right:
+
+```objc
+switch (condition) { // condition is of type enum { A, B, C }.
+case A:
+   ...
+   break;
+case B:
+case C:
+   ...
+   break;
+}
+
+switch (anotherCondition) { // condition is of type unsigned
+case 1:
+   ...
+   break;
+case 2:
+case 3:
+   ...
+   break;
+default:
+   ...
+   break;
+}
+```
+
+Wrong:
+
+```objc
+switch (condition) { // condition is of type enum { A, B, C }.
+case A:
+   ...
+   break;
+default:
+   ...
+   break;
+}
+```
+
+4. Use `[[fallthrough]]` in cases that have non-empty body that cascade.
+
+Right:
+
+```objc
+switch (condition) {
+case A:
+  doSomething();
+  [[fallthrough]];
+case B:
+  doSomethingElse();
+  break;
+}
+```
+
+Wrong:
+
+```objc
+switch (condition) {
+case A:
+  doSomething();
+case B:
+  doSomethingElse();
+  break;
+}
+```
+
+5. Guard against bad casts when the condition is an enum type and all cases `return` by adding an assert outside the switch block and returning some default value.
+
+Right:
+
+```objc
+NSString *statusCodeDescription(StatusCode code)
+{
+  switch (code) { // code is of type enum { StatusCodeNoFile, StatusCodeNoPermission }.
+  case StatusCodeNoFile:
+     return @"File not found";
+  case StatusCodeNoPermission:
+     return @"Operation not permitted";
+  }
+  ASSERT_NOT_REACHED();
+  return @"";
+}
+```
+
+Wrong:
+
+```objc
+NSString *statusCodeDescription(StatusCode code)
+{
+  switch (code) { // code is of type enum { StatusCodeNoFile, StatusCodeNoPermission }.
+  case StatusCodeNoFile:
+     return @"File not found";
+  case StatusCodeNoPermission:
+     return @"Operation not permitted";
+  }
+  return @"";
+}
 ```
 
 ### Blocks
