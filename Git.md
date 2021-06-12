@@ -4,11 +4,15 @@ This is my first note.
 
 ## Break apart work into logical commits
 
-Before I can get to using Git right, the basic development workflow needs to be right. The basic unit of measure in this discussion is the patch, which I will refer interchangeably with the word commit throughout the rest of this note unless otherwise noted and I'll explain why in a moment. To be precise a commit is its own logical unit that represents one or more patches applied to a source control management system (aka repository). So, why will I be using patch and commit interchangebly? Because...
+Before I can get to using Git right, the basic development workflow needs to be right. The basic unit of measure in this discussion is the patch, which I will refer interchangeably with the word commit throughout the rest of this note unless otherwise noted and I'll explain why in a moment. To be precise a commit is its own logical unit that represents one or more patches applied to a source control management system (aka repository). So, why will I be using patch and commit interchangeably? Because...
 
 ## One Patch <=> One Commit
 
-The right way to do software engineering is to identify the smallest logical change (SLC) that does not break the build or tests. The SLC should be represented in 1 patch that is then applied to the repository in 1 commit. Why? Because:
+The right way to do software engineering is to identify a small, easily reviewed, logical change (SLC) that does not break the build or tests.
+
+Be practical when making this determination: if a change can't be made small then choose the smallest that is still a logical change. For example, logically you might be able to divide up a large refactoring change into several trivial refactoring changes, but it may be more practical to propose or commit them together.
+
+The SLC should be represented in 1 patch that is then applied to the repository in 1 commit. Why? Because:
 
 1. It is easier to review and check correctness of small changes than large ones.
    	Why is it easier to review? Smaller changes have less characters to read. They also make it easier to keep discussions focused on the small details to ensure correctness.
@@ -29,6 +33,7 @@ Now that 1 patch == 1 commit we can get to the primary motivation for this note.
 Rebase locally then optionally merge.
 
 Why? Because:
+
 1. It helps ensure that each SLC is conflict free, which is required to not break the build.
 2. It requires that conflicts found in (1)  are addressed in each SLC, which helps also ensure that each SLC does not break the build or tests.
 
